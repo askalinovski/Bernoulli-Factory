@@ -1,0 +1,65 @@
+---
+title: "The problem of <i>n</i> successes or failures in a row"
+author: "André Solér Kalinovski"
+output:
+html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    theme: yeti
+pdf_document: default
+---
+
+## Problem:
+</br>
+
+Consider a function that repeats Bernoulli trials, each of them with probability <i>p</i> of success, until one the possible outcomes occurs <i>n</i> times in a row. If the function ends with success, it returns 1. Otherwise it returns 0. Compute the probability the funciton returns 1.</n>
+</br>
+
+## Solution:
+</br>
+
+Lets consider the function a stochastic process of positive states +1,...,+<i>n</i> and negative states -1,...,-<i>n</i> which represent, respectively, the current number of successes or failures in a row. This process has the Markovian property, <i>i.e.</i>, $Pr\{X_i=x_i\}/X_{i-1}=x_{i-1},...,X_0=x_0$ = $Pr\{X_i=x_i\}/X_{i-1}=x_{i-1}$. </n>
+Note the states +<i>n</i> and -<i>n</i> are absorbing states. Our problem, therefore, consists of finding out the probability that state <i>n</i> is reached. In order to do that, we are using a technique called <i>first step analysis</i>$^1$. For our problem, we are taking the following steps:</br>
+</br>
+<b>1-</b> Given $X_0=1$, compute the probability our process reaches state +<i>n</i> as a sum of two different paths: one that the process reaches state -1 before going to +<i>n</i> and one that the process goes from state 1 to +<i>n</i> without passing the state -1.    
+<b>2-</b> Compute the probability the process reaches state +1 given $X_0=-1$(note there is no path to state +<i>n</i> from state -1 without passing by state +1).</br>
+<b>3-</b> Solve the system of equations that arises from steps 1 and 2.</br>
+<b>4-</b> Compute the initial distribution of the stochastic process.</br>
+<b>5-</b> Get the pieces together and finally come to a conclusion.</br>
+</br>
+
+### 1:
+
+Let $\;T = min\{k\ge 0,\; X_k = n\;\, or \;\,X_k =-n\}$ be the absorption time of the state. Therefore we have:</n>
+$$Pr\{X_T = n/X_1= 1\} = p^{n-1}+Pr\{X_T=n/X_0=-1\}\;.\;\sum_{i=0}^{n-2}p^i\;.\;(1-p) $$
+
+### 2:
+$$Pr\{X_T = n/X_0= -1\} = Pr\{X_T = n/X_1= 1\} \;.\; \sum_{i=0}^{n-2}p\;.\;(1-p)^{i} $$
+
+### 3:
+Let $Pr\{X_T=n/X_0=1\}= A$ and $Pr\{X_T=n/X_0=-1\}= B$. Now solving the system of equations:</n>
+$$A = p^{n-1} + B\;.\;\sum_{i=0}^{n-2}p^i\;.\;(1-p)$$
+$$B = A \;.\; \sum_{i=0}^{n-2}p\;.\;(1-p)^{i}$$
+</br></br>
+$$ A = p^{n-1}+ A \;.\; \sum_{i=0}^{n-2}p\;.\;(1-p)^{i} \;.\;\sum_{i=0}^{n-2}p^i\;.\;(1-p) $$
+$$ A = \frac{p^{n-1}}{1 - \sum_{i=0}^{n-2}p\;.\;(1-p)^{i} \;.\;\sum_{i=0}^{n-2}p^i\;.\;(1-p)}$$
+$$ A = \frac{p^{n-1}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$$
+</br></br>
+$$B = \frac{p^{n-1}\;.\; \sum_{i=0}^{n-2}p\;.\;(1-p)^{i}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$$ 
+$$B = \frac{p^{n}\;.\; \sum_{i=0}^{n-2}(1-p)^{i-2}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$$
+
+### 4:
+$$Pr\{X_0 = 1\} = p$$
+$$Pr\{X_0 = -1\} = 1-p$$
+
+### 5:
+$$Pr\{X_T=n\}=Pr\{X_T=n/X_0=1\}\;.\;Pr\{X_0 = 1\} + Pr\{X_t=n/X_0 = -1\}\;.\;Pr\{X_0=-1\}$$
+$$Pr\{X_T=n\} = p\;.\;\frac{p^{n-1}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i} +\;(1-p)\;.\;\frac{p^{n}\;.\; \sum_{i=0}^{n-2}(1-p)^{i-2}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$$ 
+$$Pr\{X_T=n\}= \frac{p^{n}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}+\frac{p^{n}\;.\; \sum_{i=1}^{n-1}(1-p)^{i}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$$
+$$Pr\{X_T=n\}=\frac{p^n\;\sum_{i=0}^{n-1}(1-p)^i{}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$$
+The probability the function returns 1 is $\frac{p^n\;\sum_{i=0}^{n-1}(1-p)^i{}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$. By repeating the process for absorption state -<i>n</i>, we get that $Pr\{X_T=-n\}=\frac{(1-p)^n\;\sum_{i=0}^{n-1}p^i{}}{1 - \sum_{i=1}^{n-1}(1-p)^{i} \;.\;\sum_{i=1}^{n-1}p^i}$. By the law of total probability, $Pr\{X_T=n\} = \frac{p^n\;\sum_{i=0}^{n-1}(1-p)^i}{p^n\;\sum_{i=0}^{n-1}(1-p)^i +(1-p)^n\;\sum_{i=0}^{n-1}p^i}$, which is obviously equal to the first result found. 
+
+
+
